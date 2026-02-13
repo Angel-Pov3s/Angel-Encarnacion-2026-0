@@ -61,7 +61,7 @@ int main() {
         case 2:
             if (contador == 0) {
                 cout << "No hay productos registrados.\n";
-            } else {
+            } else {  
                 for (int i = 0; i < contador; i++) {
                     cout << "\nProducto " << i + 1 << endl;
                     cout << "Codigo: " << productos[i].codigo << endl;
@@ -150,7 +150,7 @@ int main() {
             for (int i = 0; i < contador - 1; i++) {
                 for (int j = 0; j < contador - 1; j++) {
                     if (productos[j].precio < productos[j + 1].precio) {
-                        Producto temp = productos[j];
+                         Producto temp = productos[j];
                         productos[j] = productos[j + 1];
                         productos[j + 1] = temp;
                     }
