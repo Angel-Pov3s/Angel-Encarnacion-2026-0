@@ -1,53 +1,99 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
-#include <limits> // Necesario para limpiar el buffer
-#include <algorithm> // Para transformar a minúsculas
+#include <limits>
+#include <algorithm>
 
 using namespace std;
 
-// Estructura para los productos
-struct Producto {
+// --- CLASE ARTICULO (Sustituye a la estructura Producto) ---
+class Articulo {
+private:
     string nombre;
     int cantidad;
     double subtotal;
+
+public:
+    // Constructores sobrecargados
+    Articulo() : nombre(""), cantidad(0), subtotal(0.0) {} // Defecto
+    
+    Articulo(string nombre, int cantidad, double precio) {
+        // Uso de this-> cuando el parámetro tiene el mismo nombre
+        this->nombre = nombre;
+        this->cantidad = cantidad;
+        this->subtotal = cantidad * precio;
+    }
+
+    // Getters y Setters (Encapsulamiento)
+    string getNombre() const { return nombre; }
+    int getCantidad() const { return cantidad; }
+    double getSubtotal() const { return subtotal; }
+    
+    void setNombre(string nombre) { this->nombre = nombre; }
 };
 
-// --- FUNCIÓN PARA VALIDAR ENTRADA NUMÉRICA ---
-// Esta función evita que el programa falle si el usuario ingresa letras
+// --- POLIMORFISMO Y HERENCIA ---
+class Documento {
+protected:
+    string cliente;
+public:
+    Documento(string cliente) : cliente(cliente) {}
+    // Método virtual para polimorfismo
+    virtual void imprimirEncabezado() const = 0; 
+    virtual ~Documento() {}
+};
+
+class Boleta : public Documento {
+public:
+    Boleta(string cliente) : Documento(cliente) {}
+    // Uso de override
+    void imprimirEncabezado() const override {
+        cout << "========================================" << endl;
+        cout << "            BOLETA DE VENTA" << endl;
+        cout << "========================================" << endl;
+        cout << "Cliente: " << cliente << endl;
+    }
+};
+
+class Factura : public Documento {
+private:
+    string ruc;
+public:
+    Factura(string cliente, string ruc) : Documento(cliente), ruc(ruc) {}
+    void imprimirEncabezado() const override {
+        cout << "========================================" << endl;
+        cout << "          FACTURA ELECTRÓNICA" << endl;
+        cout << "RUC: " << ruc << endl;
+        cout << "========================================" << endl;
+        cout << "Empresa: " << cliente << endl;
+    }
+};
+
+// --- FUNCIONES DE VALIDACIÓN (Manteniendo lógica original) ---
 int leerEntero(string mensaje) {
     int valor;
     while (true) {
         cout << mensaje;
-        if (cin >> valor) {
-            return valor;
-        } else {
+        if (cin >> valor) return valor;
+        else {
             cout << ">>> Error: Ingrese solo numeros." << endl;
-            cin.clear(); // Limpia el estado de error
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta la entrada incorrecta
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
-}   
+}
 
-// Función para validar la respuesta SI o NO de forma estricta
 string leerRespuestaSiNo(string mensaje) {
     string respuesta;
     while (true) {
         cout << mensaje;
         cin >> respuesta;
-        // Convertir respuesta a minúsculas para comparar
-        for (int i = 0; i < respuesta.length(); i++) {
-            respuesta[i] = tolower(respuesta[i]);
-        }
-        if (respuesta == "si" || respuesta == "no") {
-            return respuesta;
-        } else {
-            cout << ">>> Error: Por favor escriba exactamente 'si' o 'no'." << endl;
-        }
+        for (int i = 0; i < respuesta.length(); i++) respuesta[i] = tolower(respuesta[i]);
+        if (respuesta == "si" || respuesta == "no") return respuesta;
+        else cout << ">>> Error: Por favor escriba exactamente 'si' o 'no'." << endl;
     }
 }
 
-// --- PILAR: PASO POR REFERENCIA ---
 void mostrarQR(int metodo) {
     system("clear || cls");
     cout << "  .---------------------------." << endl;
@@ -57,9 +103,9 @@ void mostrarQR(int metodo) {
     cout << "  |  TITULAR: TASTY CHICKEN   |" << endl;
     cout << "  |                           |" << endl;
     cout << "  |    [# # # # # # # #]      |" << endl;
-    cout << "  |    [#    # #    #  ]      |" << endl;
-    cout << "  |    [#  #     #  #  ]      |" << endl;
-    cout << "  |    [#    # #    #  ]      |" << endl;
+    cout << "  |    [#  #  # #    # ]      |" << endl;
+    cout << "  |    [# #       #  # ]      |" << endl;
+    cout << "  |    [#     # #    # ]      |" << endl;
     cout << "  |    [# # # # # # # #]      |" << endl;
     cout << "  |      CODIGO QR SCAN       |" << endl;
     cout << "  '---------------------------'" << endl;
@@ -68,22 +114,18 @@ void mostrarQR(int metodo) {
     cin.get();
 }
 
-// --- PILAR: PASO POR PUNTERO ---
-void imprimirTicket(Producto* lista, int n, double total, string cliente, string ruc = "") {
+// --- FUNCIÓN DE IMPRESIÓN (Uso de puntero a clase base para Polimorfismo) ---
+void imprimirTicket(Articulo* lista, int n, double total, Documento* doc) {
     system("clear || cls");
-    cout << "========================================" << endl;
-    if (ruc == "") cout << "             BOLETA DE VENTA" << endl;
-    else cout << "            FACTURA ELECTRÓNICA\nRUC: " << ruc << endl;
-    cout << "========================================" << endl;
-    cout << "Cliente: " << cliente << endl;
+    doc->imprimirEncabezado(); // Llamada polimórfica
     cout << "----------------------------------------" << endl;
     cout << "Cant. | Descripcion          | Total" << endl;
     cout << "----------------------------------------" << endl;
 
     for (int i = 0; i < n; i++) {
-        cout << "[" << lista[i].cantidad << "] | " 
-             << left << setw(20) << lista[i].nombre 
-             << " | S/ " << fixed << setprecision(2) << lista[i].subtotal << endl;
+        cout << "[" << lista[i].getCantidad() << "] | " 
+             << left << setw(20) << lista[i].getNombre() 
+             << " | S/ " << fixed << setprecision(2) << lista[i].getSubtotal() << endl;
     }
     cout << "----------------------------------------" << endl;
     cout << "TOTAL A PAGAR: S/ " << total << endl;
@@ -91,14 +133,14 @@ void imprimirTicket(Producto* lista, int n, double total, string cliente, string
 }
 
 int main() {
-    // --- PILAR: MEMORIA DINÁMICA ---
-    Producto* pedido = new Producto[100]; 
+    // Memoria dinámica para los artículos
+    Articulo* pedido = new Articulo[100]; 
     int contador = 0;
     string continuar = "si";
     double totalGeneral = 0;
 
     cout << "======================================" << endl;
-    cout << "    Bienvenidos a Tasty Hot Chicken" << endl;
+    cout << "     Bienvenidos a Tasty Hot Chicken" << endl;
     cout << "======================================" << endl;
 
     while (continuar == "si") {
@@ -106,7 +148,6 @@ int main() {
         string nombreActual;
         double precioActual = 0;
 
-        // Restricción de Categoría
         do {
             cat = leerEntero("\n1. Platos\n2. Bebidas\nSeleccione categoria: ");
             if (cat < 1 || cat > 2) cout << ">>> Error: Solo opciones 1 o 2." << endl;
@@ -163,25 +204,23 @@ int main() {
             }
         }
 
-        // Restricción de Cantidad
         do {
             cant = leerEntero("Cantidad: ");
             if (cant <= 0) cout << ">>> Error: La cantidad debe ser mayor a 0." << endl;
         } while (cant <= 0);
         
-        pedido[contador].nombre = nombreActual;
-        pedido[contador].cantidad = cant;
-        pedido[contador].subtotal = cant * precioActual;
-        totalGeneral += pedido[contador].subtotal;
+        // Uso del constructor con parámetros
+        pedido[contador] = Articulo(nombreActual, cant, precioActual);
+        totalGeneral += pedido[contador].getSubtotal();
         contador++;
 
-        // RESTRICCIÓN SOLICITADA: Solo acepta "si" o "no"
         continuar = leerRespuestaSiNo("¿Desea pedir algo mas? (si/no): ");
     }
 
-    // Facturación con restricciones
     int tipoC, pago;
     string cliente, ruc = "";
+    Documento* doc = nullptr; // Puntero para polimorfismo
+
     do {
         tipoC = leerEntero("\n¿Desea boleta o factura?\n1. Boleta\n2. Factura\nSeleccione: ");
     } while (tipoC != 1 && tipoC != 2);
@@ -198,24 +237,28 @@ int main() {
             if (!rucValido) cout << ">>> Error: RUC invalido." << endl;
         }
         cliente = "Empresa ABC SAC";
+        doc = new Factura(cliente, ruc);
     } else {
         cout << "Ingrese nombres y apellidos: ";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, cliente);
+        doc = new Boleta(cliente);
     }
 
-    // Método de pago con restricciones
     do {
         pago = leerEntero("\nMetodo de pago:\n1. Efectivo\n2. Tarjeta\n3. Yape\n4. Plin\nSeleccione: ");
     } while (pago < 1 || pago > 4);
 
     if (pago >= 3) mostrarQR(pago);
 
-    imprimirTicket(pedido, contador, totalGeneral, cliente, ruc);
+    // Impresión polimórfica
+    imprimirTicket(pedido, contador, totalGeneral, doc);
 
-    // --- LIBERACIÓN DE MEMORIA ---
+    // Limpieza de memoria
     delete[] pedido; 
+    delete doc;
     pedido = nullptr; 
+    doc = nullptr;
 
     return 0;
 }

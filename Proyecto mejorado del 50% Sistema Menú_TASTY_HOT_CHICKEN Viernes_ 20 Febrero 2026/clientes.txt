@@ -1,0 +1,6 @@
+Luciana | Boleta | -
+Felipe Raul | Factura | 12345678901
+Carlos David | Factura | 98765432101
+Fernando Rospiguiosi | Factura | 12332165477
+Cristian Dominguez | Boleta | -
+Carlos Manuel | Factura | 65478932165

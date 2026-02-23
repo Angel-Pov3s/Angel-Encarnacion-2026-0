@@ -3,25 +3,21 @@
 
 using namespace std;
 
-// CLASE BASE: Vehiculo
-class Vehiculo {
+class Vehiculo { // CLASE BASE: Vehiculo
 private:
     string marca;
     int velocidadMax;
 
-public:
-    // Constructor
+public:     // Constructor
     Vehiculo(const string& marca, int velocidadMax) {
         this->marca = marca;
         setVelocidadMax(velocidadMax);
     }
 
-    // Getters
-    string getMarca() const { return marca; }
+    string getMarca() const { return marca; }     // Getters
     int getVelocidadMax() const { return velocidadMax; }
 
-    // Setters con validación
-    void setMarca(const string& marca) {
+    void setMarca(const string& marca) {     // Setters con validación
         this->marca = marca;
     }
 
@@ -34,8 +30,7 @@ public:
         }
     }
 
-    // Método virtual
-    virtual void mostrarInfo() const {
+    virtual void mostrarInfo() const {     // Método virtual
         cout << "Marca: " << marca << endl;
         cout << "Velocidad Maxima: " << velocidadMax << " km/h" << endl;
     }
@@ -43,8 +38,7 @@ public:
     virtual ~Vehiculo() {}
 };
 
-// CLASE DERIVADA: Carro
-class Carro : public Vehiculo {
+class Carro : public Vehiculo { // CLASE DERIVADA: Carro
 private:
     int puertas;
 
@@ -71,8 +65,7 @@ public:
     }
 };
 
-// CLASE DERIVADA: Moto
-class Moto : public Vehiculo {
+class Moto : public Vehiculo { // CLASE DERIVADA: Moto
 private:
     int cilindraje;
 
@@ -81,9 +74,7 @@ public:
         : Vehiculo(marca, velocidadMax) {
         setCilindraje(cilindraje);
     }
-
     int getCilindraje() const { return cilindraje; }
-
     void setCilindraje(int cilindraje) {
         if (cilindraje > 0)
             this->cilindraje = cilindraje;
@@ -92,22 +83,18 @@ public:
             this->cilindraje = 125;
         }
     }
-
     void mostrarInfo() const override {
         Vehiculo::mostrarInfo();
         cout << "Cilindraje: " << cilindraje << " cc" << endl;
     }
 };
 
-// MAIN – PRUEBAS
-int main() {
+int main() { // MAIN – PRUEBAS
 
     Carro carro("Toyota", 200, 4);
     Moto moto("Yamaha", 180, 600);
-
     cout << "===== DATOS DEL CARRO =====" << endl;
     carro.mostrarInfo();
-
     cout << "\n===== DATOS DE LA MOTO =====" << endl;
     moto.mostrarInfo();
 

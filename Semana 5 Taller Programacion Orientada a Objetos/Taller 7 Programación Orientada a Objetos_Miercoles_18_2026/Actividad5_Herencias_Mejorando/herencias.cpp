@@ -68,8 +68,8 @@ public:
     }
 };
 
-// PARTE B – CLASE DERIVADA: Profesor
-class Profesor : public Persona {
+class Profesor : public Persona { // PARTE B – CLASE DERIVADA: Profesor
+
 private:
     string materia;
 
@@ -80,7 +80,7 @@ public:
     }
 
     string getMateria() const { return materia; }
-
+    
     void setMateria(const string& materia) {
         this->materia = materia;
     }
@@ -96,10 +96,8 @@ public:
     }
 };
 
-// PARTE C – PRUEBAS EN MAIN
-int main() {
+int main() { // PARTE C – PRUEBAS EN MAIN
 
-    // Creación de objetos
     Estudiante estudiante("Carlos", 20, "Ingenieria de Sistemas");
     Profesor profesor("Ana", 45, "Programacion");
 

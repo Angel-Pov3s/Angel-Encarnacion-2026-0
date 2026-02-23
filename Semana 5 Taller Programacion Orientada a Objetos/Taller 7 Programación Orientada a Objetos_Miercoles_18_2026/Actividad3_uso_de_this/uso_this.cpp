@@ -4,6 +4,7 @@
 using namespace std;
 
 class Celular {
+
 private:
     string marca;
     string modelo;
@@ -14,7 +15,6 @@ public:
     string getMarca() const { return marca; }
     string getModelo() const { return modelo; }
     int getBateria() const { return bateria; }
-
     // Setters usando mismo nombre y this->
     void setMarca(string marca) {
         this->marca = marca;
@@ -41,13 +41,13 @@ public:
 };
 
 int main() {
+
     Celular cel;
 
     cel.setMarca("Samsung");
     cel.setModelo("S23");
     cel.setBateria(85);
-
+    
     cel.mostrarInfo();
-
     return 0;
 }

@@ -4,6 +4,7 @@
 using namespace std;
 
 class Celular {
+
 private:
     string marca;
     string modelo;
@@ -13,7 +14,6 @@ public:
     string getMarca() const { return marca; }
     string getModelo() const { return modelo; }
     int getBateria() const { return bateria; }
-
     void setMarca(string m) { marca = m; }
     void setModelo(string mod) { modelo = mod; }
 
@@ -34,13 +34,10 @@ public:
 
 int main() {
     Celular cel;
-
     cel.setMarca("Samsung");
     cel.setModelo("S23");
+
     cel.setBateria(85);
-
     cel.mostrarInfo();
-
     return 0;
 }
-

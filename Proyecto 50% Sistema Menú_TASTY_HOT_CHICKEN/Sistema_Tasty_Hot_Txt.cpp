@@ -1,20 +1,18 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
-#include <limits> // Necesario para limpiar el buffer
-#include <algorithm> // Para transformar a minúsculas
+#include <limits>
+#include <algorithm>
+#include <fstream> 
 
 using namespace std;
 
-// Estructura para los productos
 struct Producto {
     string nombre;
     int cantidad;
     double subtotal;
 };
 
-// --- FUNCIÓN PARA VALIDAR ENTRADA NUMÉRICA ---
-// Esta función evita que el programa falle si el usuario ingresa letras
 int leerEntero(string mensaje) {
     int valor;
     while (true) {
@@ -23,19 +21,17 @@ int leerEntero(string mensaje) {
             return valor;
         } else {
             cout << ">>> Error: Ingrese solo numeros." << endl;
-            cin.clear(); // Limpia el estado de error
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descarta la entrada incorrecta
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
         }
     }
-}   
+}
 
-// Función para validar la respuesta SI o NO de forma estricta
 string leerRespuestaSiNo(string mensaje) {
     string respuesta;
     while (true) {
         cout << mensaje;
         cin >> respuesta;
-        // Convertir respuesta a minúsculas para comparar
         for (int i = 0; i < respuesta.length(); i++) {
             respuesta[i] = tolower(respuesta[i]);
         }
@@ -47,19 +43,48 @@ string leerRespuestaSiNo(string mensaje) {
     }
 }
 
-// --- PILAR: PASO POR REFERENCIA ---
+void guardarTicketEnArchivo(Producto* lista, int n, double total, string cliente, string ruc = "") {
+    ofstream archivo("ticket_venta.txt");
+
+    if (archivo.is_open()) {
+        archivo << "========================================" << endl;
+        if (ruc == "") archivo << "              BOLETA DE VENTA" << endl;
+        else archivo << "            FACTURA ELECTRÓNICA\nRUC: " << ruc << endl;
+        archivo << "========================================" << endl;
+        archivo << "Cliente: " << cliente << endl;
+        archivo << "----------------------------------------" << endl;
+        archivo << "Cant. | Descripcion          | Total" << endl;
+        archivo << "----------------------------------------" << endl;
+
+        for (int i = 0; i < n; i++) {
+            archivo << "[" << lista[i].cantidad << "] | " 
+                    << left << setw(20) << lista[i].nombre 
+                    << " | S/ " << fixed << setprecision(2) << lista[i].subtotal << endl;
+        }
+        archivo << "----------------------------------------" << endl;
+        archivo << "TOTAL A PAGAR: S/ " << total << endl;
+        archivo << "========================================" << endl;
+        archivo << "\nGracias por su preferencia." << endl;
+
+        archivo.close();
+        cout << "\n>>> El ticket ha sido guardado en 'ticket_venta.txt' con exito." << endl;
+    } else {
+        cout << "\n>>> Error: No se pudo crear el archivo del ticket." << endl;
+    }
+}
+
 void mostrarQR(int metodo) {
     system("clear || cls");
     cout << "  .---------------------------." << endl;
-    cout << "  |       PAGO CON " << (metodo == 3 ? "YAPE" : "PLIN") << "       |" << endl;
+    cout << "  |        PAGO CON " << (metodo == 3 ? "YAPE" : "PLIN") << "        |" << endl;
     cout << "  |---------------------------|" << endl;
     cout << "  |  CEL: 962559265           |" << endl;
     cout << "  |  TITULAR: TASTY CHICKEN   |" << endl;
     cout << "  |                           |" << endl;
     cout << "  |    [# # # # # # # #]      |" << endl;
-    cout << "  |    [#    # #    #  ]      |" << endl;
-    cout << "  |    [#  #     #  #  ]      |" << endl;
-    cout << "  |    [#    # #    #  ]      |" << endl;
+    cout << "  |    [#     # #    # ]      |" << endl;
+    cout << "  |    [#  #      #  # ]      |" << endl;
+    cout << "  |    [#     # #    # ]      |" << endl;
     cout << "  |    [# # # # # # # #]      |" << endl;
     cout << "  |      CODIGO QR SCAN       |" << endl;
     cout << "  '---------------------------'" << endl;
@@ -68,11 +93,10 @@ void mostrarQR(int metodo) {
     cin.get();
 }
 
-// --- PILAR: PASO POR PUNTERO ---
 void imprimirTicket(Producto* lista, int n, double total, string cliente, string ruc = "") {
     system("clear || cls");
     cout << "========================================" << endl;
-    if (ruc == "") cout << "             BOLETA DE VENTA" << endl;
+    if (ruc == "") cout << "              BOLETA DE VENTA" << endl;
     else cout << "            FACTURA ELECTRÓNICA\nRUC: " << ruc << endl;
     cout << "========================================" << endl;
     cout << "Cliente: " << cliente << endl;
@@ -91,7 +115,6 @@ void imprimirTicket(Producto* lista, int n, double total, string cliente, string
 }
 
 int main() {
-    // --- PILAR: MEMORIA DINÁMICA ---
     Producto* pedido = new Producto[100]; 
     int contador = 0;
     string continuar = "si";
@@ -106,7 +129,6 @@ int main() {
         string nombreActual;
         double precioActual = 0;
 
-        // Restricción de Categoría
         do {
             cat = leerEntero("\n1. Platos\n2. Bebidas\nSeleccione categoria: ");
             if (cat < 1 || cat > 2) cout << ">>> Error: Solo opciones 1 o 2." << endl;
@@ -146,7 +168,6 @@ int main() {
             do {
                 cout << "--- BEBIDAS ---\n1. Cocona (S/2)\t2. Chicha (S/2)\t3. Gaseosa Pers. (S/4)\n4. Agua Pers. (S/2)\t5. Cafe (S/3)\t6. Jugo Fresa (S/4)\n7. Jugo Platano (S/4)\t8. Jugo Esp. (S/6)\t9. Jugo Piña (S/4)\n10. Jugo Malta (S/7)\nSeleccione Bebida (1-10): ";
                 opc = leerEntero("");
-                if (opc < 1 || opc > 10) cout << ">>> Error: Bebida no existe." << endl;
             } while (opc < 1 || opc > 10);
 
             switch(opc) {
@@ -163,7 +184,6 @@ int main() {
             }
         }
 
-        // Restricción de Cantidad
         do {
             cant = leerEntero("Cantidad: ");
             if (cant <= 0) cout << ">>> Error: La cantidad debe ser mayor a 0." << endl;
@@ -175,11 +195,9 @@ int main() {
         totalGeneral += pedido[contador].subtotal;
         contador++;
 
-        // RESTRICCIÓN SOLICITADA: Solo acepta "si" o "no"
         continuar = leerRespuestaSiNo("¿Desea pedir algo mas? (si/no): ");
     }
 
-    // Facturación con restricciones
     int tipoC, pago;
     string cliente, ruc = "";
     do {
@@ -204,7 +222,6 @@ int main() {
         getline(cin, cliente);
     }
 
-    // Método de pago con restricciones
     do {
         pago = leerEntero("\nMetodo de pago:\n1. Efectivo\n2. Tarjeta\n3. Yape\n4. Plin\nSeleccione: ");
     } while (pago < 1 || pago > 4);
@@ -213,7 +230,8 @@ int main() {
 
     imprimirTicket(pedido, contador, totalGeneral, cliente, ruc);
 
-    // --- LIBERACIÓN DE MEMORIA ---
+    guardarTicketEnArchivo(pedido, contador, totalGeneral, cliente, ruc);
+
     delete[] pedido; 
     pedido = nullptr; 
 

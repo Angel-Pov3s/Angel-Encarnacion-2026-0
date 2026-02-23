@@ -86,7 +86,6 @@ public:
 // MAIN
 int main() {
 
-    //En main():
     Estudiante estudiante("Carlos", 20, "Ingeniería");
     Profesor profesor("Ana", 45, "Programación");
 
@@ -95,13 +94,12 @@ int main() {
 
     personas[0] = &estudiante;
     personas[1] = &profesor;
-
     //Recorrido del arreglo rol
     cout << "=== POLIMORFISMO EN ACCION ===" << endl;
 
     for (int i = 0; i < 2; i++) {
         personas[i]->rol();  // Llamada polimórfica
     }
-
+    
     return 0;
 }

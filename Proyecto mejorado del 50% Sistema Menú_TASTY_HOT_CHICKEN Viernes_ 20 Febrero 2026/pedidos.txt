@@ -1,0 +1,60 @@
+========================================
+Cliente: Luciana
+Documento: Boleta
+Atendido por: Angel Jhoel (Cajero)
+----------------------------------------
+Brosther E-Pierna | 5 | 55
+Agua Personal | 3 | 6
+TOTAL: S/ 61
+========================================
+
+========================================
+Cliente: Felipe Raul
+Documento: Factura
+Atendido por: Luis Alessandro (Mesero)
+----------------------------------------
+Brosther E-Pierna | 3 | 33
+Agua Personal | 5 | 10
+TOTAL: S/ 43
+========================================
+
+========================================
+Cliente: Carlos David
+Documento: Factura
+Atendido por: Haniel Elias (Cajero)
+----------------------------------------
+Brosther Ala | 2 | 18
+Jugo Especial | 14 | 84
+TOTAL: S/ 102
+========================================
+
+========================================
+Cliente: Fernando Rospiguiosi
+Documento: Factura
+Atendido por: Joel Garcia (Mesero)
+----------------------------------------
+Salchibrosther | 4 | 64
+Bebida Cocona | 31 | 62
+TOTAL: S/ 126
+========================================
+
+========================================
+Cliente: Cristian Dominguez
+Documento: Boleta
+Atendido por: Joel Garcia (Mesero)
+----------------------------------------
+Brosther Ala | 2 | 18
+Agua Personal | 5 | 10
+TOTAL: S/ 28
+========================================
+
+========================================
+Cliente: Carlos Manuel
+Documento: Factura
+Atendido por: Jorge Luna (Cajero)
+----------------------------------------
+Brosther Ala | 2 | 18
+Cafe | 3 | 9
+TOTAL: S/ 27
+========================================
+
