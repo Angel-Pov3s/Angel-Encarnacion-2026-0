@@ -309,20 +309,20 @@ void mostrarQR(int metodo) {
     else
         cout << "          PAGO CON PLIN\n";
 
-    cout << "-----------------------------------------\n";
-    cout << "  CEL: 962559265\n";
-    cout << "  TITULAR: TASTY CHICKEN\n";
-    cout << "-----------------------------------------\n\n";
-
-    cout << "        [# # # # # # # #]\n";
-    cout << "        [#   #   #   #   ]\n";
-    cout << "        [# #   # #   # # ]\n";
-    cout << "        [#   #   #   #   ]\n";
-    cout << "        [# # # # # # # #]\n";
-    cout << "\n";
-    cout << "            CODIGO QR SCAN\n";
-    cout << "-----------------------------------------\n";
-    cout << "Presione ENTER tras realizar el pago...";
+    cout << "  .---------------------------." << endl;
+    cout << "  |       PAGO CON " << (metodo == 3 ? "YAPE" : "PLIN") << "       |" << endl;
+    cout << "  |---------------------------|" << endl;
+    cout << "  |  CEL: 962559265           |" << endl;
+    cout << "  |  TITULAR: TASTY CHICKEN   |" << endl;
+    cout << "  |                           |" << endl;
+    cout << "  |    [# # # # # # # #]      |" << endl;
+    cout << "  |    [#  #  # #    # ]      |" << endl;
+    cout << "  |    [# #       #  # ]      |" << endl;
+    cout << "  |    [#     # #    # ]      |" << endl;
+    cout << "  |    [# # # # # # # #]      |" << endl;
+    cout << "  |      CODIGO QR SCAN       |" << endl;
+    cout << "  '---------------------------'" << endl;
+    cout << "  Presione Enter tras realizar el pago...";
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();

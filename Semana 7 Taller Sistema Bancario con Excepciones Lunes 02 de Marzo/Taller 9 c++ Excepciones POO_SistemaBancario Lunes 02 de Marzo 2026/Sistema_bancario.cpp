@@ -207,3 +207,64 @@ int main() {
 
     return 0;
 }
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Estudiante {
+protected:
+    string carrera;
+
+public:
+    Estudiante(string c) : carrera(c) {}
+};
+
+class Trabajador {
+protected:
+    double salario;
+
+public:
+    Trabajador(double s) : salario(s) {}
+};
+
+class EstudianteTrabajador : public Estudiante, public Trabajador {
+public:
+    EstudianteTrabajador(string c, double s)
+        : Estudiante(c), Trabajador(s) {}
+
+    void mostrar() const {
+        cout << "Carrera: " << carrera << endl;
+        cout << "Salario: " << salario << endl;
+    }
+};
+
+int main() {
+
+    string carrera;
+    double salario;
+
+    cout << "Ingrese la carrera: ";
+    getline(cin, carrera);
+
+    while (carrera.empty()) {
+        cout << "La carrera no puede estar vacia. Ingrese nuevamente: ";
+        getline(cin, carrera);
+    }
+
+    cout << "Ingrese el salario: ";
+    cin >> salario;
+
+    while (salario <= 0) {
+        cout << "Salario invalido. Ingrese nuevamente: ";
+        cin >> salario;
+    }
+
+    EstudianteTrabajador et(carrera, salario);
+
+    cout << "\nDatos del Estudiante Trabajador:\n";
+    et.mostrar();
+
+    return 0;
+}
