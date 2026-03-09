@@ -1,0 +1,9 @@
+Hugo Garcia | Boleta | -
+Daniela Fernanda | Boleta | -
+Jesus Roberto | Factura | 12345678901
+Diego Bartolo | Factura | 98765432102
+Ricardo Luna | Factura | 65425687914
+Slomy Jose | Boleta | -
+Pepe Luna | Factura | 36524976530
+Ricardo Mendoza | Factura | 65298655201
+Aisha Moni | Factura | 65236596235

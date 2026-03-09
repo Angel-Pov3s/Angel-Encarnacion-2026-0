@@ -3,13 +3,13 @@
 #include <iomanip>
 #include <limits>
 #include <algorithm>
+#include <vector>   
 #include <fstream>
 #include <cstdlib>
 #include <stdexcept>
 
 using namespace std;
 
-// ===== ENUMERADO PARA EL ESTADO DEL PEDIDO =====
 enum EstadoPedido {
 
     RECEPCIONADO,
@@ -19,9 +19,6 @@ enum EstadoPedido {
     ENTREGADO
 
 };
-
-
-// ===================== FUNCION PARA MOSTRAR EL ESTADO =====================
 
 string estadoToString(EstadoPedido estado) {
 
@@ -37,39 +34,82 @@ string estadoToString(EstadoPedido estado) {
     }
 }
 
-// ===================== ESTRUCTURAS =====================
-
-struct Producto {
+class Producto {
+private:
     string nombre;
     double precio;
     int cantidad;
     double subtotal;
+
+public:
+
+    void setNombre(string n) { nombre = n; }
+    string getNombre() const { return nombre; }
+    
+    void setPrecio(double p) { precio = p; }
+    double getPrecio() const { return precio; }
+    
+    void setCantidad(int c) { cantidad = c; }
+    int getCantidad() const { return cantidad; }
+    
+    void setSubtotal(double s) { subtotal = s; }
+    double getSubtotal() const { return subtotal; }
 };
 
 
-struct Cliente {
+class Cliente {
+private:
     string nombre;
     string tipoDocumento;
     string ruc;
+
+public:
+    void setNombre(string n) { nombre = n; }
+    string getNombre() const { return nombre; }
+    
+    void setTipoDocumento(string t) { tipoDocumento = t; }
+    string getTipoDocumento() const { return tipoDocumento; }
+    
+    void setRuc(string r) { ruc = r; }
+    string getRuc() const { return ruc; }
 };
 
-struct Pedido {
-
+class Pedido {
+private:
     Producto productos[100];
     int cantidadProductos;
     double total;
+    EstadoPedido estado;
 
-    EstadoPedido estado;   // ← uso del enum
-
+public:
+    void setCantidadProductos(int c) { cantidadProductos = c; }
+    int getCantidadProductos() const { return cantidadProductos; }
+    
+    void setTotal(double t) { total = t; }
+    double getTotal() const { return total; }
+    
+    void setEstado(EstadoPedido e) { estado = e; }
+    EstadoPedido getEstado() const { return estado; }
+    
+    Producto& getProducto(int index) { return productos[index]; }
 };
 
-struct Trabajador {
+class Trabajador {
+private:
     int id;
     string nombre;
-    string rol; // Cajero o Mesero
-};
+    string rol; 
 
-// ===================== INTERFAZ =====================
+public:
+    void setId(int _id) { id = _id; }
+    int getId() const { return id; }
+    
+    void setNombre(string n) { nombre = n; }
+    string getNombre() const { return nombre; }
+    
+    void setRol(string r) { rol = r; }
+    string getRol() const { return rol; }
+};
 
 class IImprimible {
 
@@ -81,7 +121,60 @@ public:
 
 };
 
-// ===================== CLASE TICKET =====================
+class Orden : public IImprimible {
+
+private:
+
+    vector<Producto> items; 
+    EstadoPedido estado;
+
+    Cliente* cliente; 
+    Trabajador* atendidoPor;
+
+public:
+
+    Orden(Cliente* c, Trabajador* t) : cliente(c), atendidoPor(t), estado(RECEPCIONADO) {}
+
+    void agregarProducto(const Producto& p) { 
+        items.push_back(p); 
+    }
+
+    double calcularTotal() const {
+
+        double total = 0;
+
+        for(const auto& p : items)
+            total += p.getPrecio() * p.getCantidad();
+
+        return total;
+    }
+
+    void imprimir() override {
+        cout << "Orden del cliente: " << cliente->getNombre() << endl;
+        cout << "Atendido por: " << atendidoPor->getNombre() << endl;
+        cout << "Estado: " << estadoToString(estado) << endl;
+    }
+};
+
+ostream& operator<<(ostream& os, const Orden& o) {
+    os << "===== TICKET PEDIDO =====\n";
+    os << "Pedido registrado en el sistema.\n";
+    os << "=========================\n";
+    return os;
+}
+
+class GestorPersistencia {
+public:
+    static void guardarTicket(const Orden& o) {
+        ofstream archivo("pedidos.txt", ios::app);
+        if (archivo.is_open()) {
+            archivo << o; 
+            archivo << "\n\n";
+            archivo.close();
+            cout << ">>> Pedido guardado en archivo.\n";
+        }
+    }
+};
 
 class Ticket : public IImprimible {
 
@@ -108,9 +201,9 @@ public:
 
         for (int i = 0; i < n; i++) {
 
-            cout << lista[i].nombre
-                 << " x" << lista[i].cantidad
-                 << " = S/ " << lista[i].subtotal
+            cout << lista[i].getNombre()
+                 << " x" << lista[i].getCantidad()
+                 << " = S/ " << lista[i].getSubtotal()
                  << endl;
         }
 
@@ -119,7 +212,37 @@ public:
     }
 };
 
-// ===================== VALIDACIONES =====================
+class InputException : public runtime_error {
+public:
+    InputException(const string& msg) : runtime_error(msg) {}
+};
+
+class Validador {
+public:
+    static int leer(string msg, int min, int max) {
+        int v;
+        while (true) {
+            try {
+                cout << msg;
+                if (!(cin >> v)) throw InputException("Formato no numerico.");
+                if (v < min || v > max) throw out_of_range("Fuera de rango.");
+                return v;
+            } catch (const exception& e) {
+                cout << ">>> Error: " << e.what() << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
+        }
+    }
+
+    static string leer(string msg) { 
+        string v;
+        cout << msg;
+        cin.ignore();
+        getline(cin, v);
+        return v;
+    }
+};
 
 int leerEnteroSeguro(string mensaje, int min, int max) {
 
@@ -163,21 +286,19 @@ string leerRespuestaSiNo(string mensaje) {
     }
 }
 
-// ===================== ARCHIVOS TXT =====================
-
 void guardarClienteTXT(Cliente c) {
     ofstream archivo("clientes.txt", ios::app);
-    archivo << c.nombre << " | "
-            << c.tipoDocumento << " | "
-            << c.ruc << endl;
+    archivo << c.getNombre() << " | "
+            << c.getTipoDocumento() << " | "
+            << c.getRuc() << endl;
     archivo.close();
 }
 
 void guardarTrabajadorTXT(Trabajador t) {
     ofstream archivo("trabajadores.txt", ios::app);
-    archivo << t.id << " | "
-            << t.nombre << " | "
-            << t.rol << endl;
+    archivo << t.getId() << " | "
+            << t.getNombre() << " | "
+            << t.getRol() << endl;
     archivo.close();
 }
 
@@ -202,9 +323,9 @@ bool buscarTrabajadorPorID(int idBuscado, Trabajador &trabajadorEncontrado) {
         int id = stoi(idStr);
 
         if (id == idBuscado) {
-            trabajadorEncontrado.id = id;
-            trabajadorEncontrado.nombre = nombre;
-            trabajadorEncontrado.rol = rol;
+            trabajadorEncontrado.setId(id);
+            trabajadorEncontrado.setNombre(nombre);
+            trabajadorEncontrado.setRol(rol);
             archivo.close();
             return true;
         }
@@ -213,47 +334,49 @@ bool buscarTrabajadorPorID(int idBuscado, Trabajador &trabajadorEncontrado) {
     archivo.close();
     return false;
 }
+
 void guardarPedidoTXT(Cliente c, Trabajador t, Producto* lista, int n, double total) {
     ofstream archivo("pedidos.txt", ios::app);
     archivo << "========================================\n";
-    archivo << "Cliente: " << c.nombre << endl;
-    archivo << "Documento: " << c.tipoDocumento << endl;
-    archivo << "Atendido por: " << t.nombre << " (" << t.rol << ")\n";
+    archivo << "Cliente: " << c.getNombre() << endl;
+    archivo << "Documento: " << c.getTipoDocumento() << endl;
+    archivo << "Atendido por: " << t.getNombre() << " (" << t.getRol() << ")\n";
     archivo << "----------------------------------------\n";
     for (int i = 0; i < n; i++) {
-        archivo << lista[i].nombre << " | "
-                << lista[i].cantidad << " | "
-                << lista[i].subtotal << endl;
+        archivo << lista[i].getNombre() << " | "
+                << lista[i].getCantidad() << " | "
+                << lista[i].getSubtotal() << endl;
     }
     archivo << "TOTAL: S/ " << total << endl;
     archivo << "========================================\n\n";
     archivo.close();
 }
 
-// ===================== REGISTRO TRABAJADOR =====================
-
 Trabajador loginTrabajador() {
 
     Trabajador t;
 
     cout << "\n===== LOGIN TRABAJADOR =====\n";
-    t.id = leerEnteroSeguro("Ingrese su ID: ", 1, 9999);    
+    int idTemp = leerEnteroSeguro("Ingrese su ID: ", 1, 9999);    
     cin.ignore();
 
-    if (buscarTrabajadorPorID(t.id, t)) {
+    if (buscarTrabajadorPorID(idTemp, t)) {
 
-        cout << "\nBienvenido nuevamente " << t.nombre << endl;
-        cout << "Rol: " << t.rol << endl;
+        cout << "\nBienvenido nuevamente " << t.getNombre() << endl;
+        cout << "Rol: " << t.getRol() << endl;
 
     } else {
 
         cout << "\nID no encontrado. Registrando nuevo trabajador...\n";
+        t.setId(idTemp);
 
         cout << "Nombre: ";
-        getline(cin, t.nombre);
+        string nomTemp;
+        getline(cin, nomTemp);
+        t.setNombre(nomTemp);
 
-    int rol = leerEnteroSeguro("1. Cajero\n2. Mesero\nSeleccione: ",1,2);        
-    t.rol = (rol == 1) ? "Cajero" : "Mesero";
+        int rolOp = leerEnteroSeguro("1. Cajero\n2. Mesero\nSeleccione: ",1,2);        
+        t.setRol((rolOp == 1) ? "Cajero" : "Mesero");
 
         guardarTrabajadorTXT(t);
 
@@ -263,9 +386,6 @@ Trabajador loginTrabajador() {
     return t;
 }
 
-
-// ===================== REGISTRO CLIENTE =====================
-
 Cliente registrarCliente() {
     Cliente c;
     cout << "\n===== DATOS inicial del cliente =====\n";
@@ -273,31 +393,33 @@ Cliente registrarCliente() {
 
     cin.ignore();
     cout << "Nombre del cliente: ";
-    getline(cin, c.nombre);
+    string nomTemp;
+    getline(cin, nomTemp);
+    c.setNombre(nomTemp);
 
     if (tipo == 2) {
-        c.tipoDocumento = "Factura";
+        c.setTipoDocumento("Factura");
         bool valido = false;
         while (!valido) {
             cout << "Ingrese RUC (11 digitos): ";
-            cin >> c.ruc;
-            valido = (c.ruc.length() == 11 &&
-                      all_of(c.ruc.begin(), c.ruc.end(), ::isdigit));
+            string rucTemp;
+            cin >> rucTemp;
+            valido = (rucTemp.length() == 11 &&
+                      all_of(rucTemp.begin(), rucTemp.end(), ::isdigit));
             if (!valido) cout << ">>> RUC invalido.\n";
+            else c.setRuc(rucTemp);
         }
     } else {
-        c.tipoDocumento = "Boleta";
-        c.ruc = "-";
+        c.setTipoDocumento("Boleta");
+        c.setRuc("-");
     }
 
     guardarClienteTXT(c);
     return c;
 }
 
-// ===================== QR =====================
-
 void mostrarQR(int metodo) {
-    system("cls"); // En Linux usar: system("clear");
+    system("cls"); 
 
     cout << "\n";
     cout << "=========================================\n";
@@ -317,8 +439,8 @@ void mostrarQR(int metodo) {
     cout << "  |                           |" << endl;
     cout << "  |    [# # # # # # # #]      |" << endl;
     cout << "  |    [#  #  # #    # ]      |" << endl;
-    cout << "  |    [# #       #  # ]      |" << endl;
-    cout << "  |    [#     # #    # ]      |" << endl;
+    cout << "  |    [# #        #  #]      |" << endl;
+    cout << "  |    [#      # #    #]      |" << endl;
     cout << "  |    [# # # # # # # #]      |" << endl;
     cout << "  |      CODIGO QR SCAN       |" << endl;
     cout << "  '---------------------------'" << endl;
@@ -328,57 +450,26 @@ void mostrarQR(int metodo) {
     cin.get();
 }
 
-void procesarPago() {
-    int metodo;
-
-    cout << "\nSeleccione metodo de pago:\n";
-    cout << "1. Efectivo\n";
-    cout << "2. Tarjeta\n";
-    cout << "3. Yape\n";
-    cout << "4. Plin\n";
-    cout << "Opcion: ";
-    cin >> metodo;
-
-    switch (metodo) {
-        case 1:
-            cout << "Pago en efectivo registrado.\n";
-            break;
-
-        case 2:
-            cout << "Pago con tarjeta procesado.\n";
-            break;
-
-        case 3:
-        case 4:
-            mostrarQR(metodo);
-            break;
-
-        default:
-            cout << "Metodo invalido.\n";
-    }
-}
-// ===================== TICKET =====================
-
 void imprimirTicket(Producto* lista, int n, double total, Cliente c, Trabajador t, EstadoPedido estadoActual) {
 
     system("cls || clear");
 
     cout << "========================================\n";
-    cout << "         TASTY HOT CHICKEN\n";
+    cout << "          TASTY HOT CHICKEN\n";
     cout << "========================================\n";
-    cout << "Cliente: " << c.nombre << endl;
-    cout << "Documento: " << c.tipoDocumento << endl;
-    cout << "Atendido por: " << t.nombre << " (" << t.rol << ")\n";
+    cout << "Cliente: " << c.getNombre() << endl;
+    cout << "Documento: " << c.getTipoDocumento() << endl;
+    cout << "Atendido por: " << t.getNombre() << " (" << t.getRol() << ")\n";
     cout << "----------------------------------------\n";
     cout << "Cant | Producto                | Total\n";
     cout << "----------------------------------------\n";
 
     for (int i = 0; i < n; i++) {
 
-        cout << setw(4) << lista[i].cantidad << " | "
-             << left << setw(22) << lista[i].nombre
+        cout << setw(4) << lista[i].getCantidad() << " | "
+             << left << setw(22) << lista[i].getNombre()
              << " | S/ " << fixed << setprecision(2)
-             << lista[i].subtotal << endl;
+             << lista[i].getSubtotal() << endl;
     }
 
     cout << "----------------------------------------\n";
@@ -391,8 +482,6 @@ void imprimirTicket(Producto* lista, int n, double total, Cliente c, Trabajador 
 
     cout << "========================================\n";
 }
-
-// ===================== PROGRAMA PRINCIPAL =====================
 
 int main() {
 
@@ -498,12 +587,12 @@ int main() {
 
         cant = leerEnteroSeguro("Cantidad: ",1,50);
 
-        pedido[contador].nombre = nombreActual;
-        pedido[contador].precio = precioActual;
-        pedido[contador].cantidad = cant;
-        pedido[contador].subtotal = precioActual * cant;
+        pedido[contador].setNombre(nombreActual);
+        pedido[contador].setPrecio(precioActual);
+        pedido[contador].setCantidad(cant);
+        pedido[contador].setSubtotal(precioActual * cant);
 
-        totalGeneral += pedido[contador].subtotal;
+        totalGeneral += pedido[contador].getSubtotal();
         contador++;
 
         continuar = leerRespuestaSiNo("¿Desea pedir algo mas? (si/no): ");

@@ -1,0 +1,97 @@
+========================================
+Cliente: Hugo Garcia
+Documento: Boleta
+Atendido por: Angel Poves (Cajero)
+----------------------------------------
+Salchipapa Cl. | 4 | 32
+Jugo Malta | 6 | 42
+Alitas Picantes | 2 | 40
+TOTAL: S/ 114
+========================================
+
+========================================
+Cliente: Daniela Fernanda
+Documento: Boleta
+Atendido por: Ricardo Pepe (Cajero)
+----------------------------------------
+Choripapa Esp. | 20 | 260
+Jugo Malta | 4 | 28
+Jugo Fresa | 15 | 60
+TOTAL: S/ 348
+========================================
+
+========================================
+Cliente: Jesus Roberto
+Documento: Factura
+Atendido por: Angie Mia (Mesero)
+----------------------------------------
+Salchipapa Cl. | 5 | 40
+Bebida Cocona | 5 | 10
+Brosther E-Pierna | 1 | 11
+TOTAL: S/ 61
+========================================
+
+========================================
+Cliente: Diego Bartolo
+Documento: Factura
+Atendido por: Mia Lucia (Mesero)
+----------------------------------------
+Brosther Pecho | 4 | 48
+Jugo Malta | 5 | 35
+Brosther Ala | 2 | 18
+TOTAL: S/ 101
+========================================
+
+========================================
+Cliente: Ricardo Luna
+Documento: Factura
+Atendido por: Oriana Namuche (Cajero)
+----------------------------------------
+Choripapa Esp. | 21 | 273
+Cafe | 6 | 18
+Jugo Especial | 14 | 84
+Cafe | 3 | 9
+Brosther Pierna | 2 | 20
+TOTAL: S/ 404
+========================================
+
+========================================
+Cliente: Slomy Jose
+Documento: Boleta
+Atendido por: Fernando Sebastian (Mesero)
+----------------------------------------
+Jugo Malta | 4 | 28
+Choripapa Esp. | 5 | 65
+TOTAL: S/ 93
+========================================
+
+========================================
+Cliente: Pepe Luna
+Documento: Factura
+Atendido por: Diogo Sandro (Mesero)
+----------------------------------------
+Alitas Picantes | 5 | 100
+Jugo Malta | 5 | 35
+TOTAL: S/ 135
+========================================
+
+========================================
+Cliente:Juan Jorge
+Documento: Factura
+Atendido por: Juan Jorge (Mesero)
+----------------------------------------
+Jugo Especial | 5 | 30
+Jugo Malta | 5 | 35
+TOTAL: S/ 65
+========================================
+
+========================================
+Cliente: Aisha Moni
+Documento: Factura
+Atendido por: Alvieri Zahir (Mesero)
+----------------------------------------
+Choripapa Cl. | 7 | 70
+Jugo Malta | 6 | 42
+TOTAL: S/ 112
+========================================
+
