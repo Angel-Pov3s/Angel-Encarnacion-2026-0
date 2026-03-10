@@ -20,6 +20,28 @@ enum EstadoPedido {
 
 };
 
+string validarSoloTexto(string mensaje) {
+    string texto;
+    while (true) {
+        try {
+            cout << mensaje;
+            getline(cin, texto);
+
+            if (texto.empty()) throw runtime_error("El campo no puede estar vacio.");
+
+            for (char c : texto) {
+                if (!isalpha(c) && !isspace(c)) {
+                    throw runtime_error("El nombre debe contener solo letras.");
+                }
+            }
+            return texto;
+        }
+        catch (const exception& e) {
+            cout << ">>> Error: " << e.what() << endl;
+        }
+    }
+}
+
 string estadoToString(EstadoPedido estado) {
 
     switch(estado) {
@@ -353,48 +375,53 @@ void guardarPedidoTXT(Cliente c, Trabajador t, Producto* lista, int n, double to
 }
 
 Trabajador loginTrabajador() {
-
     Trabajador t;
 
     cout << "\n===== LOGIN TRABAJADOR =====\n";
-    int idTemp = leerEnteroSeguro("Ingrese su ID: ", 1, 9999);    
+    
+    int idTemp;
+    while (true) {
+        try {
+            idTemp = leerEnteroSeguro("Ingrese su ID (exactamente 4 digitos): ", 1000, 9999);
+            
+            if (to_string(idTemp).length() != 4) {
+                throw runtime_error("El ID debe tener exactamente 4 digitos.");
+            }
+            break; 
+        } catch (const exception& e) {
+            cout << ">>> Error: " << e.what() << endl;
+        }
+    }
+    
     cin.ignore();
 
     if (buscarTrabajadorPorID(idTemp, t)) {
-
         cout << "\nBienvenido nuevamente " << t.getNombre() << endl;
         cout << "Rol: " << t.getRol() << endl;
-
     } else {
-
         cout << "\nID no encontrado. Registrando nuevo trabajador...\n";
         t.setId(idTemp);
 
-        cout << "Nombre: ";
-        string nomTemp;
-        getline(cin, nomTemp);
+        string nomTemp = validarSoloTexto("Nombre: ");
         t.setNombre(nomTemp);
 
-        int rolOp = leerEnteroSeguro("1. Cajero\n2. Mesero\nSeleccione: ",1,2);        
+        int rolOp = leerEnteroSeguro("1. Cajero\n2. Mesero\nSeleccione: ", 1, 2);        
         t.setRol((rolOp == 1) ? "Cajero" : "Mesero");
 
         guardarTrabajadorTXT(t);
-
         cout << "\nRegistro exitoso.\n";
     }
-
     return t;
 }
 
 Cliente registrarCliente() {
     Cliente c;
     cout << "\n===== DATOS inicial del cliente =====\n";
-    int tipo = leerEnteroSeguro("1. Boleta\n2. Factura\nSeleccione: ",1,2);
+    int tipo = leerEnteroSeguro("1. Boleta\n2. Factura\nSeleccione: ", 1, 2);
 
     cin.ignore();
-    cout << "Nombre del cliente: ";
-    string nomTemp;
-    getline(cin, nomTemp);
+    
+    string nomTemp = validarSoloTexto("Nombre del cliente: ");
     c.setNombre(nomTemp);
 
     if (tipo == 2) {

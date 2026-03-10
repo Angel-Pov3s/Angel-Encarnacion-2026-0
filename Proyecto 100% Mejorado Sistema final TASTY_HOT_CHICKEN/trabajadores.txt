@@ -7,3 +7,7 @@
 2975 | Diogo Sandro | Mesero
 9085 | Juan Jorge | Mesero
 3598 | Alvieri Zahir | Mesero
+4578 | Sebastian Espinoza | Mesero
+1458 | Raul Diaz | Cajero
+6985 | Federico Rolando | Mesero
+1234 | Raul Astoncio  | Cajero

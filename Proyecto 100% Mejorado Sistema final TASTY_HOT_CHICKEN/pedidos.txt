@@ -95,3 +95,45 @@ Jugo Malta | 6 | 42
 TOTAL: S/ 112
 ========================================
 
+========================================
+Cliente: Ricardo Mendoza
+Documento: Boleta
+Atendido por: Sebastian Espinoza (Mesero)
+----------------------------------------
+Choripapa Esp. | 4 | 52
+Bebida Cocona | 5 | 10
+Choripapa Esp. | 2 | 26
+TOTAL: S/ 88
+========================================
+
+========================================
+Cliente: Luis Acosta
+Documento: Boleta
+Atendido por: Raul Diaz (Cajero)
+----------------------------------------
+Choripapa Cl. | 4 | 40
+Jugo Malta | 4 | 28
+TOTAL: S/ 68
+========================================
+
+========================================
+Cliente: Fernando Rospligiosi
+Documento: Boleta
+Atendido por: Federico Rolando (Mesero)
+----------------------------------------
+Choripapa Cl. | 4 | 40
+Jugo Malta | 4 | 28
+Bebida Cocona | 1 | 2
+TOTAL: S/ 70
+========================================
+
+========================================
+Cliente: Alvieri Rogelio
+Documento: Factura
+Atendido por: Raul Astoncio  (Cajero)
+----------------------------------------
+Brosther Ala | 2 | 18
+Chicha Morada | 1 | 2
+TOTAL: S/ 20
+========================================
+
